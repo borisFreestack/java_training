@@ -1,4 +1,4 @@
-package com.freestack.persistence.lesson;
+package com.freestack.persistence.models;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class Actor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;

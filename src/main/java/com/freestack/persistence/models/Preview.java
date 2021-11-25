@@ -1,22 +1,20 @@
-package com.freestack.persistence.lesson;
+package com.freestack.persistence.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 public class Preview {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Date date;
     private String city;
     private Integer numberOfSeats;
 
+    public Preview(){}
 
     public Long getId() {
         return id;
@@ -51,4 +49,14 @@ public class Preview {
     }
 
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Preview{");
+        sb.append("id=").append(id);
+        sb.append(", date=").append(date);
+        sb.append(", city='").append(city).append('\'');
+        sb.append(", numberOfSeats=").append(numberOfSeats);
+        sb.append('}');
+        return sb.toString();
+    }
 }

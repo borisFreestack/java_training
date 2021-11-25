@@ -1,23 +1,27 @@
-package com.freestack.persistence.lesson;
+package com.freestack.persistence.models;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "movie")
-public class Film {
+public class Movie {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "titre", length = 300, nullable = false)
+    @Column(nullable = false)
     private String title;
     private String description;
     private Integer releaseYear;
-    @Column(name = "rental_duration")
-    private Integer rentalDuration;
-    @Column(name = "rentalrate")
-    private Float rentalRate;
     private Integer length;
+
+    public Movie() {
+    }
+
+    public Movie(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
 
     public Long getId() {
         return id;
@@ -51,27 +55,23 @@ public class Film {
         this.releaseYear = releaseYear;
     }
 
-    public Integer getRentalDuration() {
-        return rentalDuration;
-    }
-
-    public void setRentalDuration(Integer rentalDuration) {
-        this.rentalDuration = rentalDuration;
-    }
-
-    public Float getRentalRate() {
-        return rentalRate;
-    }
-
-    public void setRentalRate(Float rentalRate) {
-        this.rentalRate = rentalRate;
-    }
-
     public Integer getLength() {
         return length;
     }
 
     public void setLength(Integer length) {
         this.length = length;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Film{");
+        sb.append("id=").append(id);
+        sb.append(", title='").append(title).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", releaseYear=").append(releaseYear);
+        sb.append(", length=").append(length);
+        sb.append('}');
+        return sb.toString();
     }
 }
