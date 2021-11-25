@@ -1,9 +1,10 @@
 package com.freestack.persistence.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "movie")
 public class Movie {
 
     @Id
@@ -15,12 +16,26 @@ public class Movie {
     private Integer releaseYear;
     private Integer length;
 
+    @OneToMany(mappedBy = "movie")
+    private List<Preview> previews;
+
     public Movie() {
     }
 
-    public Movie(String title, String description) {
-        this.title = title;
-        this.description = description;
+    public void addPreview(Preview preview){
+        if(previews == null) {
+            previews = new ArrayList<>();
+        }
+        previews.add(preview);
+    }
+
+    public List<Preview> getPreviews() {
+        return previews;
+    }
+
+    public Movie setPreviews(List<Preview> previews) {
+        this.previews = previews;
+        return this;
     }
 
     public Long getId() {
@@ -71,6 +86,7 @@ public class Movie {
         sb.append(", description='").append(description).append('\'');
         sb.append(", releaseYear=").append(releaseYear);
         sb.append(", length=").append(length);
+        sb.append(", previews=").append(previews);
         sb.append('}');
         return sb.toString();
     }
