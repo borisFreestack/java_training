@@ -1,10 +1,9 @@
 package com.freestack.persistence.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Actor {
@@ -16,11 +15,27 @@ public class Actor {
     private String lastName;
     private LocalDate birthDate;
 
+    @ManyToMany
+    @JoinTable(
+        name = "actor_in_movie",
+        joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id")
+    )
+    private List<Movie> moviesPlayedIn;
 
-    public Actor(){}
+    public Actor() {
+    }
+
     public Actor(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public void addMovie(Movie movie){
+        if(moviesPlayedIn == null){
+            moviesPlayedIn = new ArrayList<>();
+        }
+        moviesPlayedIn.add(movie);
     }
 
     public Long getId() {
@@ -55,4 +70,14 @@ public class Actor {
         this.birthDate = birthDate;
     }
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Actor{");
+        sb.append("id=").append(id);
+        sb.append(", firstName='").append(firstName).append('\'');
+        sb.append(", lastName='").append(lastName).append('\'');
+        sb.append(", birthDate=").append(birthDate);
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -10,16 +10,22 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
     private String title;
     private String description;
     private Integer releaseYear;
     private Integer length;
 
-    @OneToMany(mappedBy = "movie")
+    @OneToMany(mappedBy = "movie", orphanRemoval = true)
     private List<Preview> previews;
 
+    @ManyToMany(mappedBy = "moviesPlayedIn")
+    private List<Actor> actorsPlayedIn;
+
     public Movie() {
+    }
+
+    public Movie(String title) {
+        this.title = title;
     }
 
     public void addPreview(Preview preview){
@@ -80,13 +86,14 @@ public class Movie {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Film{");
+        final StringBuffer sb = new StringBuffer("Movie{");
         sb.append("id=").append(id);
         sb.append(", title='").append(title).append('\'');
         sb.append(", description='").append(description).append('\'');
         sb.append(", releaseYear=").append(releaseYear);
         sb.append(", length=").append(length);
         sb.append(", previews=").append(previews);
+        sb.append(", actorsPlayedIn=").append(actorsPlayedIn);
         sb.append('}');
         return sb.toString();
     }
