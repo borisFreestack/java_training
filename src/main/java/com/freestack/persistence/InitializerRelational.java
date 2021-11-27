@@ -77,8 +77,6 @@ public class InitializerRelational {
             .getInstance().createEntityManager();
         try {
             entityManager.getTransaction().begin();
-
-
             Movie leClanDesSiciliens = new Movie("le clan des siciliens");
             Movie unSingeEnHiver = new Movie("un singe en hiver");
             Actor jeanGabin = new Actor("jean", "gabin");
@@ -106,10 +104,110 @@ public class InitializerRelational {
         }
     }
 
+    /*
+    with CascadeType.REMOVE
+    example in movie class:
+    @OneToMany(mappedBy = "movie", cascade = {CascadeType.REMOVE})
+    private List<Preview> previews;
+     */
+    public static void tp7() {
+        out.println("#### tp7");
+        EntityManager entityManager = EntityManagerFactorySingleton
+            .getInstance().createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            Preview preview1 = new Preview();
+            Preview preview2 = new Preview();
+            Movie movie = new Movie();
+            movie.addPreview(preview1);
+            movie.addPreview(preview2);
+            entityManager.persist(movie);
+            //because Movie has cascade on CascadeType.PERSIST
+            //persist movie also creates Previews associated
+            entityManager.getTransaction().commit();
+            entityManager.getTransaction().begin();
+            entityManager.remove(movie);
+            //because Movie has cascade on CascadeType.REMOVE
+            //remove movie also removes Previews associated
+            entityManager.getTransaction().commit();
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
+
+    /*
+    with orphanRemoval = true
+    example in movie class:
+     @OneToMany(mappedBy = "movie", cascade = {CascadeType.PERSIST}, orphanRemoval = true)
+    private List<Preview> previews;
+     */
+    public static void tp7OrphanRemoval() {
+        out.println("#### tp7");
+        EntityManager entityManager = EntityManagerFactorySingleton
+            .getInstance().createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            Preview preview1 = new Preview();
+            Preview preview2 = new Preview();
+            Movie movie = new Movie();
+            movie.addPreview(preview1);
+            movie.addPreview(preview2);
+            preview1.setMovie(movie);
+            preview2.setMovie(movie);
+            entityManager.persist(movie);
+            entityManager.getTransaction().commit();
+            entityManager.getTransaction().begin();
+            //removing preview from previews of movie make them orphan
+            movie.getPreviews().removeIf(p -> true);
+            entityManager.remove(movie);
+            entityManager.getTransaction().commit();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    /*
+    avec les mains
+    example in movie class:
+    @OneToMany(mappedBy = "movie")
+    private List<Preview> previews;
+     */
+    public static void tp7WithHands() {
+        out.println("#### tp7");
+        EntityManager entityManager = EntityManagerFactorySingleton
+            .getInstance().createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            Preview preview1 = new Preview();
+            Preview preview2 = new Preview();
+            Movie movie = new Movie();
+            movie.addPreview(preview1);
+            movie.addPreview(preview2);
+            preview1.setMovie(movie);
+            preview2.setMovie(movie);
+            entityManager.persist(movie);
+            entityManager.getTransaction().commit();
+            entityManager.getTransaction().begin();
+            //without CascadeType.REMOVE on movie->previews we need
+            //to remove previews before to remove movie
+            movie.getPreviews().forEach(preview -> entityManager.remove(preview));
+            //delete all previews then movie can be removed
+            entityManager.remove(movie);
+            entityManager.getTransaction().commit();
+        } finally {
+            entityManager.close();
+        }
+    }
+
     public static void main(String[] args) {
         tp3();
         tp4();
         tp6();
+        tp7();
+        tp7OrphanRemoval();
+        tp7WithHands();
     }
 
 }

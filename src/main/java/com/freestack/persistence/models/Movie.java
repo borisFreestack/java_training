@@ -15,7 +15,7 @@ public class Movie {
     private Integer releaseYear;
     private Integer length;
 
-    @OneToMany(mappedBy = "movie", orphanRemoval = true)
+    @OneToMany(mappedBy = "movie", cascade = {CascadeType.PERSIST}, orphanRemoval = true)
     private List<Preview> previews;
 
     @ManyToMany(mappedBy = "moviesPlayedIn")

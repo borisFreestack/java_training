@@ -12,7 +12,7 @@ public class Preview {
     private Date date;
     private String city;
     private Integer numberOfSeats;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name="MOVIE_ID")
     private Movie movie;
 
